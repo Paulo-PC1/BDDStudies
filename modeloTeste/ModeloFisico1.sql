@@ -1,0 +1,34 @@
+/* ModeloLogico1: */
+
+CREATE TABLE LIVROS (
+    CodLivro INT PRIMARY KEY,
+    Titulo CHAR(30),
+    Ano VARCHAR(9),
+    CodAutor INT,
+    CodEditora INT
+);
+
+CREATE TABLE AUTORES (
+    CodAutor INT PRIMARY KEY,
+    Nome CHAR(30),
+    Endereco VARCHAR(200),
+    Telefone CHAR(14),
+    Email VARVHAR(200)
+);
+
+CREATE TABLE EDITORAS (
+    CodEditora INT PRIMARY KEY,
+    Nome CHAR(30),
+    Endereco VARCHAR(200),
+    Site VARCHAR(50)
+);
+ 
+ALTER TABLE LIVROS ADD CONSTRAINT FK_LIVROS_2
+    FOREIGN KEY (CodAutor)
+    REFERENCES AUTORES (CodAutor)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE LIVROS ADD CONSTRAINT FK_LIVROS_3
+    FOREIGN KEY (CodEditora)
+    REFERENCES EDITORAS (CodEditora)
+    ON DELETE CASCADE;
