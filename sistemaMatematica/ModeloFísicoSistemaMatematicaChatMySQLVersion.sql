@@ -1,0 +1,79 @@
+--MySQL Version
+CREATE DATABASE NomeBanco;
+
+USE NomeBanco;
+
+CREATE TABLE USUARIOS (
+    ID_Usuario INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(150) NOT NULL,
+    Email VARCHAR(200) NOT NULL UNIQUE,
+    Senha VARCHAR(255) NOT NULL,
+    Data_Cadastro DATETIME NOT NULL
+);
+
+CREATE TABLE NIVEL (
+    Id_Nivel INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(50) NOT NULL,
+    Descricao VARCHAR(255)
+);
+
+CREATE TABLE CATEGORIA (
+    ID_Categoria INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Descricao VARCHAR(255)
+);
+
+CREATE TABLE MODELO_EXERCICIO (
+    ID_Modelo INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Operacao VARCHAR(20),
+    Valor_Maximo INT,
+    Valor_Minimo INT,
+    Quantidade_Operandos INT,
+    Ativo BOOLEAN,
+    FK_CATEGORIA_ID_Categoria INT,
+    FK_NIVEL_Id_Nivel INT,
+    FOREIGN KEY (FK_CATEGORIA_ID_Categoria)
+        REFERENCES CATEGORIA(ID_Categoria),
+    FOREIGN KEY (FK_NIVEL_Id_Nivel)
+        REFERENCES NIVEL(Id_Nivel)
+);
+
+CREATE TABLE EXERCICIO_GERADO (
+    ID_Exercicio_Gerado INT AUTO_INCREMENT PRIMARY KEY,
+    Enunciado VARCHAR(255),
+    Resposta_Correta DECIMAL(10,2),
+    Data_Geracao DATETIME,
+    FK_MODELO_EXERCICIO_ID_Modelo INT,
+    FOREIGN KEY (FK_MODELO_EXERCICIO_ID_Modelo)
+        REFERENCES MODELO_EXERCICIO(ID_Modelo)
+);
+
+CREATE TABLE RESPOSTA (
+    ID_Resposta INT AUTO_INCREMENT PRIMARY KEY,
+    Resposta_Usuario DECIMAL(10,2),
+    Correta BOOLEAN,
+    Tempo_Resposta INT,
+    Data_Resposta DATETIME,
+    FK_USUARIOS_ID_Usuario INT,
+    FK_EXERCICIO_GERADO_ID_Exercicio_Gerado INT,
+    FOREIGN KEY (FK_USUARIOS_ID_Usuario)
+        REFERENCES USUARIOS(ID_Usuario),
+    FOREIGN KEY (FK_EXERCICIO_GERADO_ID_Exercicio_Gerado)
+        REFERENCES EXERCICIO_GERADO(ID_Exercicio_Gerado)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE PROGRESSO (
+    ID_Progresso INT AUTO_INCREMENT PRIMARY KEY,
+    Total_Acertos INT DEFAULT 0,
+    Total_Erros INT DEFAULT 0,
+    Pontuacao INT DEFAULT 0,
+    FK_USUARIOS_ID_Usuario INT UNIQUE,
+    FK_NIVEL_Id_Nivel INT,
+    FOREIGN KEY (FK_USUARIOS_ID_Usuario)
+        REFERENCES USUARIOS(ID_Usuario)
+        ON DELETE CASCADE,
+    FOREIGN KEY (FK_NIVEL_Id_Nivel)
+        REFERENCES NIVEL(Id_Nivel)
+);
